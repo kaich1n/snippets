@@ -1,0 +1,10 @@
+BasedOnStyle: WebKit
+UseTab: Never
+IndentWidth: 4
+ColumnLimit: 0
+AlignTrailingComments: true
+AlignEscapedNewlinesLeft: true
+PointerAlignment: Right
+ForEachMacros: ['NNNI_LIST_FOREACH']
+AllowShortFunctionsOnASingleLine: Inline
+BreakBeforeBinaryOperators: None
