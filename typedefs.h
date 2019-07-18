@@ -16,6 +16,10 @@
 #define EXTERN_C_END
 #endif
 
+#ifndef CONCAT
+#define CONCAT(prefix, name) prefix ## name
+#endif
+
 #ifndef UNUSED
 #define UNUSED(x) ((void)x);
 #endif
@@ -37,6 +41,9 @@
 
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(x) (sizeof(x) / sizeof(x[0]))
+#endif
+#ifndef NELEM
+#define NELEM(array) ARRAYSIZE(array)
 #endif
 
 #ifndef MIN 
