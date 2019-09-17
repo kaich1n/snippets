@@ -42,6 +42,7 @@ static void server_cb(struct uloop_fd *fd, unsigned int events)
 
             fprintf(stderr, "Disconnected (%d): %s\n", r, strerror(errno));
             close(sfd);
+            break;
         }
         buf[r] = 0;
         fprintf(stderr, "%s", buf);
@@ -54,8 +55,9 @@ static void server_cb(struct uloop_fd *fd, unsigned int events)
 
 static int run_server(void)
 {
+#if 0
     server.cb = server_cb;
-    server.fd = usock(USOCK_TCP | USOCK_SERVER | USOCK_IPV4ONLY | USOCK_NUMERIC, "127.0.0.1", port);
+    server.fd = usock(USOCK_TCP | USOCK_SERVER | USOCK_IPV4ONLY, "127.0.0.1", port);
     if (server.fd < 0) {
         perror("usock");
         return 1;
@@ -64,7 +66,34 @@ static int run_server(void)
     uloop_init();
     uloop_fd_add(&server, ULOOP_READ);
     uloop_run();
+#else
+    server.fd = usock(USOCK_TCP | USOCK_IPV4ONLY, "shashakeaiduo.com", port);
+    if (server.fd < 0) {
+        perror("usock");
+        return 1;
+    }
 
+    while (1) {
+        int r;
+        char buf[32];
+
+        if ((r = read(server.fd, buf, sizeof(buf))) <= 0) {
+            if (errno == EAGAIN) {
+                fprintf(stderr, "EAGAIN");
+                continue;
+            }
+
+            fprintf(stderr, "Disconnected (%d): %s\n", r, strerror(errno));
+            close(server.fd);
+            break;
+        }
+        buf[r] = 0;
+        fprintf(stderr, "%s", buf);
+        sleep(1);
+    }
+
+    close(server.fd);
+#endif
     return 0;
 }
 
